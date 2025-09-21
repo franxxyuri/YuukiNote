@@ -1,0 +1,25 @@
+package com.yukinoa.presentation.theme
+
+import androidx.compose.ui.graphics.Color
+
+// Light Theme Colors
+val Purple80 = Color(0xFFD0BCFF)
+val PurpleGrey80 = Color(0xFFCCC2DC)
+val Pink80 = Color(0xFFEFB8C8)
+
+// Dark Theme Colors
+val Purple40 = Color(0xFF6650a4)
+val PurpleGrey40 = Color(0xFF625b71)
+val Pink40 = Color(0xFF7D5260)
+
+// Custom Colors
+val NoteColors = listOf(
+    Color(0xFFF8F9FA), // Default
+    Color(0xFFF8BBD9), // Pink
+    Color(0xFFFFE0B2), // Orange
+    Color(0xFFFFF59D), // Yellow
+    Color(0xFFC8E6C9), // Green
+    Color(0xFFB3E5FC), // Blue
+    Color(0xFFD1C4E9), // Purple
+    Color(0xFFFFCCBC)  // Red
+)
