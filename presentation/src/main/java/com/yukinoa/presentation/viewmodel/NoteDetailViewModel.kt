@@ -24,7 +24,16 @@ class NoteDetailViewModel @Inject constructor(
 ) : BaseViewModel<NoteDetailViewModel.State, NoteDetailViewModel.Event>(State()) {
 
     data class State(
-        val note: Note = Note.EMPTY,
+        val note: Note = Note(
+            id = 0,
+            title = "",
+            content = "",
+            color = 0,
+            isPinned = false,
+            tagIds = emptyList(),
+            createdAt = java.time.LocalDateTime.now(),
+            updatedAt = java.time.LocalDateTime.now()
+        ),
         val isLoading: Boolean = false,
         val error: String? = null,
         val isSaved: Boolean = false
@@ -43,7 +52,7 @@ class NoteDetailViewModel @Inject constructor(
     private val noteId: Long? = savedStateHandle.get<String>(NOTE_ID_KEY)?.toLongOrNull()
 
     init {
-        if (noteId != null) {
+        if (noteId != null && noteId > 0) {
             handleEvent(Event.LoadNote)
         }
     }
@@ -104,20 +113,36 @@ class NoteDetailViewModel @Inject constructor(
 
     private fun saveNote() {
         viewModelScope.launch {
-            val result = if (noteId == null) {
-                insertNoteUseCase(state.value.note)
+            val now = java.time.LocalDateTime.now()
+            val noteToSave = if (noteId == null || noteId == 0L) {
+                // 新笔记
+                state.value.note.copy(
+                    createdAt = now,
+                    updatedAt = now
+                )
             } else {
-                updateNoteUseCase(state.value.note)
+                // 更新现有笔记
+                state.value.note.copy(
+                    updatedAt = now
+                )
+            }
+
+            val result = if (noteId == null || noteId == 0L) {
+                insertNoteUseCase(noteToSave)
+            } else {
+                updateNoteUseCase(noteToSave)
             }
 
             when (result) {
                 is Result.Success -> {
-                    setState { copy(isSaved = true, error = null) }
+                    setState { copy(isSaved = true) }
                 }
                 is Result.Error -> {
-                    setState { copy(error = result.exception.message, isSaved = false) }
+                    setState { copy(error = result.exception.message) }
                 }
-                else -> {}
+                is Result.Loading -> {
+                    setState { copy(isLoading = true) }
+                }
             }
         }
     }
@@ -125,22 +150,24 @@ class NoteDetailViewModel @Inject constructor(
     // 添加删除笔记功能
     private fun deleteNote() {
         viewModelScope.launch {
-            if (noteId != null) {
+            if (noteId != null && noteId > 0) {
                 val result = deleteNoteUseCase(state.value.note)
                 when (result) {
                     is Result.Success -> {
-                        setState { copy(isSaved = true) } // 使用isSaved标志来表示删除成功并返回
+                        setState { copy(isSaved = true) }
                     }
                     is Result.Error -> {
                         setState { copy(error = result.exception.message) }
                     }
-                    else -> {}
+                    is Result.Loading -> {
+                        setState { copy(isLoading = true) }
+                    }
                 }
             }
         }
     }
 
     companion object {
-        const val NOTE_ID_KEY = "noteId"
+        private const val NOTE_ID_KEY = "noteId"
     }
 }

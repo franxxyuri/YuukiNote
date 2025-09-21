@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.yukinoa.presentation.ui.screens.NoteDetailScreen
-import com.yukinoa.presentation.ui.screens.NoteListScreen
+import com.yukinoa.presentation.ui.screens.TabletAdaptiveScreen
 import com.yukinoa.presentation.ui.components.SettingsScreen
 
 @Composable
@@ -19,7 +19,7 @@ fun NoteAppNavigation() {
         startDestination = "notes"
     ) {
         composable("notes") {
-            NoteListScreen(navController)
+            TabletAdaptiveScreen(navController)
         }
         composable(
             "note_detail/{noteId}",

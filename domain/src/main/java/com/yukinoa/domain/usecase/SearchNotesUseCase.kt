@@ -10,6 +10,8 @@ class SearchNotesUseCase @Inject constructor(
     private val noteRepository: NoteRepository
 ) {
     operator fun invoke(query: String): Flow<Result<List<Note>>> {
+        // 目前只实现普通文本搜索
+        // 后续可以扩展支持标签搜索等功能
         return noteRepository.searchNotes(query)
     }
 }
