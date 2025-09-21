@@ -61,6 +61,17 @@ fun NoteDetailScreen(
                     }
                 },
                 actions = {
+                    // 只有在编辑现有笔记时才显示删除按钮
+                    if (state.note.id != 0L) {
+                        IconButton(
+                            onClick = {
+                                // TODO: 添加删除确认对话框
+                                viewModel.handleEvent(NoteDetailViewModel.Event.DeleteNote)
+                            }
+                        ) {
+                            Icon(Icons.Default.Delete, contentDescription = "Delete")
+                        }
+                    }
                     IconButton(
                         onClick = {
                             viewModel.handleEvent(NoteDetailViewModel.Event.TogglePin(!state.note.isPinned))

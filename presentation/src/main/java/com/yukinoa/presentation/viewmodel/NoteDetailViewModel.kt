@@ -8,6 +8,7 @@ import com.yukinoa.domain.model.Note
 import com.yukinoa.domain.usecase.GetNoteByIdUseCase
 import com.yukinoa.domain.usecase.InsertNoteUseCase
 import com.yukinoa.domain.usecase.UpdateNoteUseCase
+import com.yukinoa.domain.usecase.DeleteNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ class NoteDetailViewModel @Inject constructor(
     private val getNoteByIdUseCase: GetNoteByIdUseCase,
     private val insertNoteUseCase: InsertNoteUseCase,
     private val updateNoteUseCase: UpdateNoteUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<NoteDetailViewModel.State, NoteDetailViewModel.Event>(State()) {
 
@@ -35,6 +37,7 @@ class NoteDetailViewModel @Inject constructor(
         data class UpdateColor(val color: Int) : Event()
         data class TogglePin(val isPinned: Boolean) : Event()
         data object SaveNote : Event()
+        data object DeleteNote : Event() // 添加删除笔记事件
     }
 
     private val noteId: Long? = savedStateHandle.get<String>(NOTE_ID_KEY)?.toLongOrNull()
@@ -53,6 +56,7 @@ class NoteDetailViewModel @Inject constructor(
             is Event.UpdateColor -> updateColor(event.color)
             is Event.TogglePin -> togglePin(event.isPinned)
             is Event.SaveNote -> saveNote()
+            is Event.DeleteNote -> deleteNote() // 处理删除事件
         }
     }
 
@@ -114,6 +118,24 @@ class NoteDetailViewModel @Inject constructor(
                     setState { copy(error = result.exception.message, isSaved = false) }
                 }
                 else -> {}
+            }
+        }
+    }
+
+    // 添加删除笔记功能
+    private fun deleteNote() {
+        viewModelScope.launch {
+            if (noteId != null) {
+                val result = deleteNoteUseCase(state.value.note)
+                when (result) {
+                    is Result.Success -> {
+                        setState { copy(isSaved = true) } // 使用isSaved标志来表示删除成功并返回
+                    }
+                    is Result.Error -> {
+                        setState { copy(error = result.exception.message) }
+                    }
+                    else -> {}
+                }
             }
         }
     }

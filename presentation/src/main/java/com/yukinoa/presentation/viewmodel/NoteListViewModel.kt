@@ -35,6 +35,7 @@ class NoteListViewModel @Inject constructor(
         data class SearchNotes(val query: String) : Event()
         data class DeleteNote(val note: Note) : Event()
         data object ClearSearch : Event()
+        data object ActivateSearch : Event() // 添加激活搜索事件
     }
 
     private val _searchQuery = MutableStateFlow("")
@@ -50,6 +51,7 @@ class NoteListViewModel @Inject constructor(
             is Event.SearchNotes -> searchNotes(event.query)
             is Event.DeleteNote -> deleteNote(event.note)
             is Event.ClearSearch -> clearSearch()
+            is Event.ActivateSearch -> activateSearch() // 处理激活搜索事件
         }
     }
 
@@ -105,6 +107,11 @@ class NoteListViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    // 添加激活搜索功能
+    private fun activateSearch() {
+        setState { copy(isSearchActive = true) }
     }
 
     private fun deleteNote(note: Note) {

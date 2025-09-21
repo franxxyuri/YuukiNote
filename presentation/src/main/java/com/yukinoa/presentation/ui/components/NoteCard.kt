@@ -26,11 +26,15 @@ import androidx.compose.ui.unit.dp
 import com.yukinoa.domain.model.Note
 import java.time.format.DateTimeFormatter
 import com.yukinoa.presentation.theme.LocalNoteColors
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.ExperimentalFoundationApi
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun NoteCard(
     note: Note,
     onClick: () -> Unit,
+    onLongClick: () -> Unit = {}, // 添加长按事件
     modifier: Modifier = Modifier
 ) {
     val dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy")
@@ -39,7 +43,10 @@ fun NoteCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick // 添加长按事件处理
+            ),
         colors = CardDefaults.cardColors(
             containerColor = if (note.color >= 0 && note.color < noteColors.size) {
                 noteColors[note.color]
