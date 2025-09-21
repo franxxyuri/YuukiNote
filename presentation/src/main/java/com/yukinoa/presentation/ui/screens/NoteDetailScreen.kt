@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.yukinoa.presentation.ui.components.NoteColorPicker
-import com.yukinoa.presentation.theme.NoteColors
+import com.yukinoa.presentation.theme.LocalNoteColors
 import com.yukinoa.presentation.viewmodel.NoteDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,6 +43,7 @@ fun NoteDetailScreen(
     viewModel: NoteDetailViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val noteColors = LocalNoteColors.current
 
     LaunchedEffect(state.isSaved) {
         if (state.isSaved) {
@@ -86,7 +87,13 @@ fun NoteDetailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(NoteColors[state.note.color])
+                .background(
+                    if (state.note.color >= 0 && state.note.color < noteColors.size) {
+                        noteColors[state.note.color]
+                    } else {
+                        MaterialTheme.colorScheme.background
+                    }
+                )
         ) {
             BasicTextField(
                 value = state.note.title,

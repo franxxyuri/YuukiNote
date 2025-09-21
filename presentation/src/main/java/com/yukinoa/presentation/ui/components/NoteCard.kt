@@ -25,7 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.yukinoa.domain.model.Note
 import java.time.format.DateTimeFormatter
-import com.yukinoa.presentation.theme.NoteColors
+import com.yukinoa.presentation.theme.LocalNoteColors
 
 @Composable
 fun NoteCard(
@@ -34,13 +34,18 @@ fun NoteCard(
     modifier: Modifier = Modifier
 ) {
     val dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy")
+    val noteColors = LocalNoteColors.current
 
     Card(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
-            containerColor = NoteColors.getOrNull(note.color) ?: NoteColors[0]
+            containerColor = if (note.color >= 0 && note.color < noteColors.size) {
+                noteColors[note.color]
+            } else {
+                MaterialTheme.colorScheme.surface
+            }
         )
     ) {
         Column(
@@ -55,7 +60,8 @@ fun NoteCard(
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 if (note.isPinned) {
@@ -74,7 +80,8 @@ fun NoteCard(
                     text = note.content,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 

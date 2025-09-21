@@ -10,6 +10,8 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -29,6 +31,9 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Pink40,
     background = Color(0xFFf5f5f5) // 浅色主题背景，与笔记默认颜色一致
 )
+
+// 创建CompositionLocal用于传递当前主题下的笔记颜色
+val LocalNoteColors = compositionLocalOf { LightNoteColors }
 
 @Composable
 fun NoteAppTheme(
@@ -53,9 +58,14 @@ fun NoteAppTheme(
         }
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    // 根据当前主题选择笔记颜色
+    val noteColors = if (darkTheme) DarkNoteColors else LightNoteColors
+
+    CompositionLocalProvider(LocalNoteColors provides noteColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
 }
