@@ -5,28 +5,34 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.yukinoa.presentation.ui.screens.NoteDetailScreen
 import com.yukinoa.presentation.ui.screens.NoteListScreen
+import com.yukinoa.presentation.ui.components.SettingsScreen
 
 @Composable
-fun NoteAppNavigation(
-    navController: NavHostController = rememberNavController()
-) {
+fun NoteAppNavigation() {
+    val navController = rememberNavController()
+
     NavHost(
         navController = navController,
-        startDestination = "note_list"
+        startDestination = "notes"
     ) {
-        composable("note_list") {
+        composable("notes") {
             NoteListScreen(navController)
         }
-
+        composable(
+            "note_detail/{noteId}",
+            arguments = listOf(navArgument("noteId") { defaultValue = "0" })
+        ) { backStackEntry ->
+            val noteId = backStackEntry.arguments?.getString("noteId") ?: "0"
+            NoteDetailScreen(navController)
+        }
         composable("note_detail") {
             NoteDetailScreen(navController)
         }
-
-        composable("note_detail/{noteId}") { backStackEntry ->
-            val noteId = backStackEntry.arguments?.getString("noteId")
-            NoteDetailScreen(navController)
+        composable("settings") {
+            SettingsScreen(onNavigateBack = { navController.popBackStack() })
         }
     }
 }

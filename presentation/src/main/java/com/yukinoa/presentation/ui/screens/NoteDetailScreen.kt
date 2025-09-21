@@ -35,15 +35,18 @@ import androidx.navigation.NavController
 import com.yukinoa.presentation.ui.components.NoteColorPicker
 import com.yukinoa.presentation.theme.LocalNoteColors
 import com.yukinoa.presentation.viewmodel.NoteDetailViewModel
+import com.yukinoa.presentation.viewmodel.UserPreferencesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteDetailScreen(
     navController: NavController,
-    viewModel: NoteDetailViewModel = hiltViewModel()
+    viewModel: NoteDetailViewModel = hiltViewModel(),
+    userPreferencesViewModel: UserPreferencesViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     val noteColors = LocalNoteColors.current
+    val userPreferences by userPreferencesViewModel.userPreferences.collectAsState()
 
     LaunchedEffect(state.isSaved) {
         if (state.isSaved) {
@@ -115,9 +118,13 @@ fun NoteDetailScreen(
                     .fillMaxWidth()
                     .padding(16.dp),
                 textStyle = TextStyle(
-                    fontSize = 24.sp,
+                    fontSize = userPreferences.titleFontSize.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = if (userPreferences.titleColor > 0 && userPreferences.titleColor < noteColors.size) {
+                        noteColors[userPreferences.titleColor]
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    }
                 ),
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 decorationBox = { innerTextField ->
@@ -125,9 +132,13 @@ fun NoteDetailScreen(
                         Text(
                             "Title",
                             style = TextStyle(
-                                fontSize = 24.sp,
+                                fontSize = userPreferences.titleFontSize.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                                color = if (userPreferences.titleColor > 0 && userPreferences.titleColor < noteColors.size) {
+                                    noteColors[userPreferences.titleColor].copy(alpha = 0.5f)
+                                } else {
+                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                                }
                             )
                         )
                     }
@@ -154,8 +165,12 @@ fun NoteDetailScreen(
                     .fillMaxSize()
                     .padding(16.dp),
                 textStyle = TextStyle(
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onSurface
+                    fontSize = userPreferences.contentFontSize.sp,
+                    color = if (userPreferences.contentColor > 0 && userPreferences.contentColor < noteColors.size) {
+                        noteColors[userPreferences.contentColor]
+                    } else {
+                        MaterialTheme.colorScheme.onSurface
+                    }
                 ),
                 cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                 decorationBox = { innerTextField ->
@@ -163,8 +178,12 @@ fun NoteDetailScreen(
                         Text(
                             "Start writing...",
                             style = TextStyle(
-                                fontSize = 16.sp,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                                fontSize = userPreferences.contentFontSize.sp,
+                                color = if (userPreferences.contentColor > 0 && userPreferences.contentColor < noteColors.size) {
+                                    noteColors[userPreferences.contentColor].copy(alpha = 0.5f)
+                                } else {
+                                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                                }
                             )
                         )
                     }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -27,7 +28,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -37,7 +40,6 @@ import androidx.compose.foundation.background
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -56,7 +58,7 @@ fun NoteListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("My Notes") },
+                title = { Text("Yuuki Notes") },
                 actions = {
                     IconButton(onClick = { 
                         // 点击搜索按钮时激活搜索栏
@@ -68,12 +70,32 @@ fun NoteListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate("note_detail")
-                }
+            Column(
+                horizontalAlignment = Alignment.End
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Add Note")
+                // 将设置按钮作为浮动按钮的一部分
+                FloatingActionButton(
+                    onClick = { 
+                        navController.navigate("settings")
+                    },
+                    modifier = Modifier
+                        .padding(bottom = 16.dp),
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                ) {
+                    Icon(
+                        Icons.Default.Settings, 
+                        contentDescription = "Settings",
+                        tint = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+                
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigate("note_detail")
+                    }
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = "Add Note")
+                }
             }
         }
     ) { paddingValues ->
