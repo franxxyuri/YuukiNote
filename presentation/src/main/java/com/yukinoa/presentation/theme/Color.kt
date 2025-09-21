@@ -14,7 +14,7 @@ val Pink40 = Color(0xFF7D5260)
 
 // Custom Colors
 val NoteColors = listOf(
-    Color(0xFFF8F9FA), // Default
+    Color(0xFFf5f5f5), // 更美观的默认浅灰色背景，替代之前的白色
     Color(0xFFF8BBD9), // Pink
     Color(0xFFFFE0B2), // Orange
     Color(0xFFFFF59D), // Yellow

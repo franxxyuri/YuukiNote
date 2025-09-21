@@ -25,6 +25,7 @@ fun NoteAppNavigation(
         }
 
         composable("note_detail/{noteId}") { backStackEntry ->
+            val noteId = backStackEntry.arguments?.getString("noteId")
             NoteDetailScreen(navController)
         }
     }

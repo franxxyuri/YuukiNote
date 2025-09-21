@@ -25,11 +25,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.yukinoa.presentation.ui.components.NoteCard
 import com.yukinoa.presentation.viewmodel.NoteListViewModel
+import androidx.compose.foundation.background // 添加background导入
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,6 +67,7 @@ fun NoteListScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .background(Color(0xFFf5f5f5)) // 使用更美观的默认背景色
         ) {
             if (state.isSearchActive) {
                 SearchBar(

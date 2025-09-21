@@ -37,7 +37,7 @@ class NoteDetailViewModel @Inject constructor(
         data object SaveNote : Event()
     }
 
-    private val noteId: Long? = savedStateHandle[NOTE_ID_KEY]
+    private val noteId: Long? = savedStateHandle.get<String>(NOTE_ID_KEY)?.toLongOrNull()
 
     init {
         if (noteId != null) {
