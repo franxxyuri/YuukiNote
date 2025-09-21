@@ -13,16 +13,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-
-        // Room schema export
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -35,6 +30,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+    }
+    
+    // Room schema export
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
     }
 }
 

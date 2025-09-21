@@ -30,13 +30,31 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
+        debug {
+            isMinifyEnabled = false
+            isDebuggable = true
+        }
     }
+    
+    flavorDimensions += "distribution"
+    productFlavors {
+        create("generic") {
+            dimension = "distribution"
+            applicationIdSuffix = ".generic"
+        }
+        create("googlePlay") {
+            dimension = "distribution"
+            applicationIdSuffix = ".play"
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -53,6 +71,14 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+    splits {
+        abi {
+            reset()
+            isEnable = true
+            isUniversalApk = true
+            include("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
         }
     }
 }
