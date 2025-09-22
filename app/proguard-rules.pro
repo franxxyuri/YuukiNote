@@ -20,13 +20,14 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# Compose
--assumenosideeffects class androidx.compose.runtime.ComposerKt {
-    public static void sourceInformation(androidx.compose.runtime.Composer, java.lang.String);
-    public static void sourceInformationMarkerStart(androidx.compose.runtime.Composer, int, java.lang.String);
-    public static void sourceInformationMarkerEnd(androidx.compose.runtime.Composer);
-}
-
+# Hilt - Keep all generated classes
+-keep class * extends dagger.hilt.android.HiltAndroidApp
+-keep class dagger.hilt.** { *; }
+-keep class javax.inject.** { *; }
+-keep class com.yukinoa.data.DataModule { *; }
+-keep class com.yukinoa.data.DataModule_* { *; }
+-keep class com.yukinoa.note.DaggerNoteApplication_HiltComponents_* { *; }
+-keep class com.yukinoa.note.Hilt_* { *; }
 
 # Room
 -keep class * extends androidx.room.RoomDatabase
@@ -44,44 +45,28 @@
 -keepclassmembers class * extends androidx.navigation.NavArgs {
     <init>(...);
 }
+-keep class androidx.navigation.compose.** { *; }
 
-# Data classes
--keepclassmembers class com.yukinoa.domain.model.** {
-    <init>(...);
+# Compose
+-assumenosideeffects class androidx.compose.runtime.ComposerKt {
+    public static void sourceInformation(androidx.compose.runtime.Composer, java.lang.String);
+    public static void sourceInformationMarkerStart(androidx.compose.runtime.Composer, int, java.lang.String);
+    public static void sourceInformationMarkerEnd(androidx.compose.runtime.Composer);
 }
--keepclassmembers class com.yukinoa.data.model.** {
-    <init>(...);
-}
+-dontwarn androidx.compose.runtime.**
 
-# Keep all the data class fields
--keepclassmembers class com.yukinoa.domain.model.** {
-    *** *;
-}
--keepclassmembers class com.yukinoa.data.model.** {
-    *** *;
-}
+# Material icons
+-keep class androidx.compose.material.icons.** { *; }
+-keep class androidx.compose.material.icons.Icons$AutoMirrored$Filled { *; }
 
-# Keep all the repository implementations
--keep class com.yukinoa.data.repository.** {*;}
--keep interface com.yukinoa.domain.repository.** {*;}
+# Core classes that need to be kept
+-keep class com.yukinoa.core.BaseViewModel { *; }
+-keep class com.yukinoa.core.Result { *; }
+-keep class com.yukinoa.core.Result$* { *; }
 
-# Keep all the use cases
--keep class com.yukinoa.domain.usecase.** {*;}
-
-# Keep all the ViewModels
--keep class com.yukinoa.presentation.viewmodel.** {*;}
-
-# Keep all the UI components
--keep class com.yukinoa.presentation.ui.** {*;}
-
-# Keep all the navigation components
--keep class com.yukinoa.presentation.navigation.** {*;}
-
-# Keep all the database classes
--keep class com.yukinoa.data.database.** {*;}
-
-# Keep all the converter classes
--keep class com.yukinoa.data.converter.** {*;}
-
-# Keep all the theme classes
--keep class com.yukinoa.presentation.theme.** {*;}
+# Add rules to suppress warnings for missing classes
+-dontwarn com.yukinoa.core.BaseViewModel
+-dontwarn com.yukinoa.core.Result$Error
+-dontwarn com.yukinoa.core.Result$Loading
+-dontwarn com.yukinoa.core.Result$Success
+-dontwarn com.yukinoa.core.Result

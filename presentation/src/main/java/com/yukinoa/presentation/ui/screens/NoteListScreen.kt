@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -39,6 +40,7 @@ import com.yukinoa.presentation.viewmodel.NoteListViewModel
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -156,7 +158,7 @@ fun NoteListScreen(
                     IconButton(onClick = {
                         viewModel.handleEvent(NoteListViewModel.Event.ClearSearch)
                     }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             } else {
